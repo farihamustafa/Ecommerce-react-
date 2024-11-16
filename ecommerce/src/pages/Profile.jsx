@@ -1,12 +1,19 @@
 import React from 'react'
-
+import { userService } from '../Services/userService'
+const userservice = new userService()
 function Profile() {
-  return (
+  const getuserdata= async()=>{
+    const response = await userservice.getUser()
+    console.log(response)
+  }
+  return (<>
     <div>
-        Profile
-      
+      Profile
     </div>
+    <button onClick={()=>getuserdata()}>Get User</button>
+    </>
   )
 }
 
 export default Profile
+                                  

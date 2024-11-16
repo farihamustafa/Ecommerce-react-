@@ -9,6 +9,9 @@ import Cart from './pages/Cart'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Guestlayout from './layouts/Guestlayout'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AppContext = createContext();
 export function useAppContext(){
@@ -20,6 +23,7 @@ function App() {
   const[cart, setCart] = useState([])
   return (
   <>
+  <ToastContainer />
   <AppContext.Provider value={{cart, setCart,API_URL}}>
   <BrowserRouter>
   {/* AUTH */}
