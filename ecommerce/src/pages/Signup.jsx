@@ -1,41 +1,77 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import * as Yup from 'yup'
+import { toast } from 'react-toastify';
+import { authService } from '../Services/authService';
+
+const authservice = new authService();
 
 function Signup() {
+
+  const router = useNavigate();
+
+
   return (
     <div class="bg-sky-100 flex justify-center items-center h-screen">
+
    
-  
     
     <div class= "lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
       <h1 class="text-2xl font-semibold mb-4">Create an account</h1>
-      <form action="#" method="POST">
-       
+      <Formik
+      initialValues={{name:'',email:'',password:''}}
+      validationSchema={Yup.object({
+        name:Yup.string().required(),
+        email:Yup.string().email().required(),
+        password:Yup.string().required()
+      })}
+
+      onSubmit={async(values)=>{
+        const response =  await  authservice.register(values);
+        console.log(response.error)
+        if(response.result !== null){
+          toast.success("Account created!")
+          router('/login')
+        }
+      }}
+      >
+      
+      <Form>
+    
         <div class="mb-4 bg-sky-100">
-          <label class="block text-gray-600">Name</label>
-          <input type="text"  name="name" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off"/>
+          <label  class="block text-gray-600">Name</label>
+          <Field type="text"  name="name" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off"/>
+          <ErrorMessage name='name' className='text-red-500' component={'div'} />
         </div>
+
         <div class="mb-4 bg-sky-100">
-          <label class="block text-gray-600">Email</label>
-          <input type="email"  name="email" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off"/>
+          <label  class="block text-gray-600">Email</label>
+          <Field type="email"  name="email" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off"/>
+          <ErrorMessage name='email' className='text-red-500' component={'div'} />
         </div>
     
         <div class="mb-4">
-          <label class="block text-gray-800">Password</label>
-          <input type="password"  name="password" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off"/>
+          <label for="password" class="block text-gray-800">Password</label>
+          <Field type="password" id="password" name="password" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off"/>
+          <ErrorMessage name='password' className='text-red-500' component={'div'} />
         </div>
-    
-      
+        
+     
+        
         {/* <div class="mb-6 text-blue-500">
           <a href="#" class="hover:underline">Forgot Password?</a>
         </div> */}
-      
-        <button type="submit" class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Submit</button>
-      </form>
     
+        <button type="submit" class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Submit</button>
+      </Form>
+
+      </Formik>
       <div class="mt-6 text-green-500 text-center">
-        <a href="#" class="hover:underline">Sign up Here</a>
+        <Link to={'/login'} class="hover:underline">Login here</Link>
       </div>
     </div>
+
     <div class="w-1/2 h-screen hidden lg:block">
       <img src="https://img.freepik.com/fotos-premium/imagen-fondo_910766-187.jpg?w=826" alt="Placeholder Image" class="object-cover w-full h-full"/>
     </div>
