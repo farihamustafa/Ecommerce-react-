@@ -1,17 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { authService } from '../services/authService'
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup'
 import { toast } from 'react-toastify';
-import { authService } from '../Services/authService';
-
 const authservice = new authService();
-
 function Signup() {
-
   const router = useNavigate();
-
-
+  const [error , setError] = useState([]);
   return (
     <div class="bg-sky-100 flex justify-center items-center h-screen">
 
@@ -29,15 +25,24 @@ function Signup() {
 
       onSubmit={async(values)=>{
         const response =  await  authservice.register(values);
-        console.log(response.error)
+        setError(response.error || []);
+
         if(response.result !== null){
           toast.success("Account created!")
           router('/login')
         }
       }}
-      >
-      
+      >    
       <Form>
+      {error.length > 0 &&
+        <div className='bg-red-300 p-5 w-full my-2 rounded'>  
+            <ul className='list-disc px-5'>
+              {error.length > 0 && error.map((err)=>(
+                <li>{err.msg}</li>
+              ))}
+            </ul>
+        </div>
+        }
     
         <div class="mb-4 bg-sky-100">
           <label  class="block text-gray-600">Name</label>
