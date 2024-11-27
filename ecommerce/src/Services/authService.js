@@ -47,4 +47,27 @@ export class authService{
 
     }
 
+    static  async  verify(token){
+        let result = null;
+        let error = null;
+        
+        await axios.post(API_URL+'auth/verify', {}, 
+            {
+              headers: { authorization: `Bearer ${token}` }  // Pass headers with Bearer token
+            })
+        .then((res)=>{
+            result = res;
+            return;
+        })
+        .catch((err)=>{
+            error = err.message;
+            toast.error(err.message)
+            return;
+        })
+        
+        return {result,error};
+    }
+
+
+
 }
