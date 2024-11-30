@@ -11,6 +11,7 @@ import Signup from './pages/Signup'
 import Guestlayout from './layouts/Guestlayout'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { jwtDecode } from "jwt-decode";
 
 
 const AppContext = createContext();
@@ -21,10 +22,12 @@ const API_URL = import.meta.env.VITE_API_URL
 
 function App() {
   const[cart, setCart] = useState([])
+  const[isLogin, setIsLogin] = useState();
+  const [userDetail, setuserDetail] = useState(localStorage.getItem('token')? jwtDecode(localStorage.getItem('token')) :{})
   return (
   <>
   <ToastContainer />
-  <AppContext.Provider value={{cart, setCart,API_URL}}>
+  <AppContext.Provider value={{cart, setCart,API_URL,isLogin, setIsLogin , userDetail}}>
   <BrowserRouter>
   {/* AUTH */}
   <Routes>

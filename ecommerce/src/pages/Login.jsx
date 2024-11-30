@@ -4,12 +4,15 @@ import { authService } from '../services/authService'
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup'
 import { toast } from 'react-toastify';
+import { useAppContext } from '../App';
 
 const authservice = new authService();
 
 function Login() {
 
   const router = useNavigate();
+  const {isLogin, setIsLogin} = useAppContext();
+
   
 
   return (
@@ -33,6 +36,7 @@ function Login() {
         const response =  await  authservice.login(values);
 
         if(response.result !== null){
+          setIsLogin(true)
           toast.success("Login successfully!")
           router('/')
         }
