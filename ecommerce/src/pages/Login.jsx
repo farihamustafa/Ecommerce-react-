@@ -5,13 +5,14 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup'
 import { toast } from 'react-toastify';
 import { useAppContext } from '../App';
+import { jwtDecode } from "jwt-decode";
 
 const authservice = new authService();
 
 function Login() {
 
   const router = useNavigate();
-  const {isLogin, setIsLogin} = useAppContext();
+  const {isLogin, setIsLogin, setuserDetail} = useAppContext();
 
   
 
@@ -37,6 +38,7 @@ function Login() {
 
         if(response.result !== null){
           setIsLogin(true)
+          setuserDetail(localStorage.getItem('token') ? jwtDecode(localStorage.getItem('token')) :{})
           toast.success("Login successfully!")
           router('/')
         }

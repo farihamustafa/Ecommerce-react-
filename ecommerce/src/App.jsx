@@ -27,7 +27,7 @@ function App() {
   return (
   <>
   <ToastContainer />
-  <AppContext.Provider value={{cart, setCart,API_URL,isLogin, setIsLogin , userDetail}}>
+  <AppContext.Provider value={{cart, setCart,API_URL,isLogin, setIsLogin , userDetail, setuserDetail}}>
   <BrowserRouter>
   {/* AUTH */}
   <Routes>
