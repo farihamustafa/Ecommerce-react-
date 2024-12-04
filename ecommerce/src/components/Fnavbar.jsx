@@ -1,36 +1,40 @@
 import React, { useEffect } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { useAppContext } from '../App';
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppContext } from '../App'
 import { authService } from '../services/authService';
-import { setLocale } from 'yup';
 
 function Fnavbar() {
-  const {isLogin, setIsLogin,userDetail } = useAppContext();
-  const router = useNavigate();
-  useEffect(()=>{
-    const verifyToken = async() =>{
+
+  const navigate = useNavigate();
+  const {isLogin,setIsLogin,userDetail} = useAppContext();
+
+  useEffect(() => {
+    const verifyToken = async () => {
       const Token = localStorage.getItem('token');
-      if(Token)
-{
-  setIsLogin(true);
-}    
-};
-verifyToken();
-  },[]);
-  const logout = async()=>{
+      if (Token) {
+        setIsLogin(true)
+      }
+    };
+    verifyToken();
+  }, []);
+
+
+  const logout = async () => {
     const Token = localStorage.getItem('token');
-    if(!Token){
-      router('/login');
-    }
-    else{
-      await authService.logout(Token);
-      router('/login');
+    if (!Token) {
+      navigate('/login');
+    } else {
+       await authService.logout(Token);
+       navigate('/login');
     }
     setIsLogin(false)
   };
-  console.log(userDetail)
+
+console.log(userDetail)
+
+
   return (
-   
+    
 
 <nav class="bg-white border-gray-200 dark:bg-gray-900">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -47,29 +51,44 @@ verifyToken();
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
         <li>
-          <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</a>
+          <Link to="/" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</Link>
         </li>
         <li>
           <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About</a>
         </li>
-        {!isLogin? <>
         <li>
-          <Link to="/signup" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Signup</Link>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Pricing</a>
+        </li>
+        <li>
+          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
+        </li>
+        <li>
+          <Link to="/cart" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Cart</Link>
+        </li>
+
+        {!isLogin ? <>
+        <li>
+          <Link to="/signup" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Sign up</Link>
         </li>
         <li>
           <Link to="/login" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Login</Link>
         </li>
         </>
-        :
-        <>
-        <li>
-          <button type='button' onClick={()=>logout()} class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Logout</button>
+        : <>
+       
+         <li>
+          <button onClick={()=>logout()} type='button' class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Logout</button>
         </li>
         <li>
-          Login as :
-          {userDetail.name}
+            Login as : {userDetail.name}
         </li>
-        </>}
+        </>  
+      }
+
+
       </ul>
     </div>
   </div>
