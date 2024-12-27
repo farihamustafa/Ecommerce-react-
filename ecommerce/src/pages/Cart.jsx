@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../App'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { orderService } from '../services/orderService';
 
 function Cart() {
 
-  const {API_URL,cart,setCart} = useAppContext()
+  const {API_URL,cart,setCart,isLogin} = useAppContext()
   const [total , setTotal] = useState(0)
-
+  const router = useNavigate();
 
 useEffect(()=>{
+
   let tt = 0
   cart.map((item)=>{
     tt += item.qty * item.price;
@@ -15,6 +21,15 @@ useEffect(()=>{
   setTotal(tt)
   
 })
+
+
+const createOrder = async(values) =>{
+  const {result,error} = await orderService.placeorder(values)
+  if(result !== null){
+    toast.success("Order placed!")
+    router('/')
+  }
+}
 
   return (
    <>
@@ -24,15 +39,22 @@ useEffect(()=>{
                 <h2 class="title font-manrope font-bold text-4xl leading-10 mb-8 text-center text-black">Shopping Cart
                 </h2>
 
+                {cart.length===0 &&
+                <>
+                <p class="block mt-2 text-center text-lg font-medium text-gray-900 dark:text-white">Cart is Empty <br/>
+                <button onClick={()=>router('/')} type="button" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go to Shopping</button>
+                </p>
+                </>
+                }
 
-
-                {cart.map((item,index)=>{
+                {cart.length!==0 && cart.map((item,index)=>{
 
                   
                   return (
-                    <div class="rounded-3xl border-2 border-gray-200 p-4 lg:p-8 grid grid-cols-12 mb-8 max-lg:max-w-lg max-lg:mx-auto gap-y-4 ">
+                    <>
+                      <div class="rounded-3xl border-2 border-gray-200 p-4 lg:p-8 grid grid-cols-12 mb-8 max-lg:max-w-lg max-lg:mx-auto gap-y-4 ">
                     <div class="col-span-12 lg:col-span-2 img box">
-                        <img src={item.url} alt="speaker image" class="max-lg:w-full lg:w-[180px] h-[200px] rounded-lg object-cover"/>
+                        <img src={item.url} alt="speaker image" class="max-lg:w-full  h-[200px] lg:w-[180px] rounded-lg object-cover"/>
                     </div>
                     <div class="col-span-12 lg:col-span-10 detail w-full lg:pl-3">
                         <div class="flex items-center justify-between w-full mb-4">
@@ -100,19 +122,46 @@ useEffect(()=>{
                         </div>
                     </div>
                 </div>
+
+
+                    </>
+                  
                   )
                 })}
                
 
 
 
+             {cart.length !== 0 &&
+             <>
              
 
+                <Formik enableReinitialize initialValues={{method:'cash',address:'',comment:'',cart:cart,payable:total }} 
+                validationSchema={Yup.object({  
+                  address : Yup.string().required(),
+                  method:Yup.string().required(),
+                  cart : Yup.array().min(1).required()
+                })}
 
+                onSubmit={(value)=>{
 
+                  value.items = [];
+                  value.cart.forEach(element => {
+                      const item = {
+                        product : element._id,
+                        price : element.price,
+                        qty : element.qty
+                      }
+                      value.items.push(item)
+                  });
 
+                  createOrder(value)
+                }}
+                >
+                  <Form>
 
-                <div class="flex flex-col md:flex-row items-center md:items-center justify-between lg:px-6 pb-6 border-b border-gray-200 max-lg:max-w-lg max-lg:mx-auto">
+                 
+             <div class="flex flex-col md:flex-row items-center md:items-center justify-between lg:px-6 pb-6 border-b border-gray-200 max-lg:max-w-lg max-lg:mx-auto">
                     <h5 class="text-gray-900 font-manrope font-semibold text-2xl leading-9 w-full max-md:text-center max-md:mb-4">Subtotal</h5>
 
                     <div class="flex items-center justify-between gap-5 ">
@@ -125,14 +174,45 @@ useEffect(()=>{
                         }</h6>
                     </div>
                 </div>
-                <div class="max-lg:max-w-lg max-lg:mx-auto">
-                    <p class="font-normal text-base leading-7 text-gray-500 text-center mb-5 mt-6">Shipping taxes, and discounts
+                <label for="countries" class="block my-2 text-sm font-medium text-gray-900 dark:text-white">Select Method</label>
+                <Field name="method" as="select" class="my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value={"cash"}>Cash</option>
+                    <option value={"cheque"}>Cheque</option>
+                </Field>
+                <ErrorMessage name='method' className='text-red-500' component={"div"} />
+                <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Address</label>
+                <Field name="address" as="textarea" class="my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  </Field>
+                  <ErrorMessage name='address' className='text-red-500' component={"div"} />
+                  <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Notes</label>
+                <Field name="comment" as="textarea" class="my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  </Field>
+
+                <div class="max-lg:max-w-lg max-lg:mx-auto mt-5">
+                    {/* <p class="font-normal text-base leading-7 text-gray-500 text-center mb-5 mt-6">Shipping taxes, and discounts
                         calculated
-                        at checkout</p>
-                    <button
-                        class="rounded-full py-4 px-6 bg-indigo-600 text-white font-semibold text-lg w-full text-center transition-all duration-500 hover:bg-indigo-700 ">Checkout</button>
-    
+                        at checkout</p> */}
+                       
+                    {isLogin ? 
+                    <button type='submit'
+                        class="rounded-full py-4 px-6 bg-indigo-600 text-white font-semibold text-lg w-full text-center transition-all duration-500 hover:bg-indigo-700 ">Place Order</button>
+                    
+                    :
+                    <button type='button' onClick={()=>router('/login')}
+                    class="rounded-full py-4 px-6 bg-indigo-600 text-white font-semibold text-lg w-full text-center transition-all duration-500 hover:bg-indigo-700 ">Login to Proceed</button>
+              
+                      }
                 </div>
+                </Form>
+                </Formik>
+ 
+             </>
+             
+             }
+
+
+
+
                 
             
         </div>

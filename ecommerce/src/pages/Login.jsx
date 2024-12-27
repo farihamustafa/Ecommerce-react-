@@ -12,8 +12,7 @@ const authservice = new authService();
 function Login() {
 
   const router = useNavigate();
-  const {isLogin, setIsLogin, setuserDetail} = useAppContext();
-
+  const {isLogin,setIsLogin,setUserDetail} = useAppContext()
   
 
   return (
@@ -38,7 +37,7 @@ function Login() {
 
         if(response.result !== null){
           setIsLogin(true)
-          setuserDetail(localStorage.getItem('token') ? jwtDecode(localStorage.getItem('token')) :{})
+          setUserDetail( localStorage.getItem('token') ? jwtDecode(localStorage.getItem('token')) : {})
           toast.success("Login successfully!")
           router('/')
         }

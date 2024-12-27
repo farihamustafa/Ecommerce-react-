@@ -67,13 +67,15 @@ export class authService{
         
         return {result,error};
     }
-    static async logout(token){
-        await axios.post(API_URL+'auth/logout',{},{
-            headers: {authorization: `Bearer ${token}`}
-        });
-        localStorage.clear()
 
-    }
+
+    static  async  logout(token){
+        await axios.post(API_URL+'auth/logout', {},
+            {
+              headers: { authorization: `Bearer ${token}` }  
+            });
+            localStorage.clear()
+    } 
 
 
 

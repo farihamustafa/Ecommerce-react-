@@ -14,6 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
   import { jwtDecode } from "jwt-decode";
 import { productService } from './services/productService'
+import OrderHistory from './pages/OrderHistory'
 
 
 const AppContext = createContext();
@@ -55,6 +56,7 @@ function App() {
           <Routes>
               <Route path='/checkout' element={<Authlayout><Checkout/></Authlayout>}  />
               <Route path='/profile' element={<Authlayout><Profile/></Authlayout>}  />
+              <Route path='/orderhistory' element={<Authlayout><OrderHistory/></Authlayout>}  />
           </Routes>
           {/* GUEST */}
           <Routes>
