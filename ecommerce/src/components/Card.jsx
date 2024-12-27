@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Card(props) {
+function Card(props) {    
     const {name,price,img,desc,onClick} = props
   return (
     
