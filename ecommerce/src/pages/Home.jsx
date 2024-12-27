@@ -20,7 +20,8 @@ function Home() {
       {products.map((product)=>(
         <Card name={product.name} price={product.price} img={product.url} desc={product.description}
         onClick={()=>{
-          const exist = cart.includes(product);
+          product.qty = 1;
+          const exist = cart.find(element => product._id ===element._id);
           if(exist){
             toast.error(product.name +" already exist in Cart!")
             return;

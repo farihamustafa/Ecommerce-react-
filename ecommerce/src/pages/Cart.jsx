@@ -32,7 +32,7 @@ useEffect(()=>{
                   return (
                     <div class="rounded-3xl border-2 border-gray-200 p-4 lg:p-8 grid grid-cols-12 mb-8 max-lg:max-w-lg max-lg:mx-auto gap-y-4 ">
                     <div class="col-span-12 lg:col-span-2 img box">
-                        <img src="https://pagedone.io/asset/uploads/1701162826.png" alt="speaker image" class="max-lg:w-full lg:w-[180px] rounded-lg object-cover"/>
+                        <img src={item.url} alt="speaker image" class="max-lg:w-full lg:w-[180px] h-[200px] rounded-lg object-cover"/>
                     </div>
                     <div class="col-span-12 lg:col-span-10 detail w-full lg:pl-3">
                         <div class="flex items-center justify-between w-full mb-4">
@@ -116,9 +116,9 @@ useEffect(()=>{
                     <h5 class="text-gray-900 font-manrope font-semibold text-2xl leading-9 w-full max-md:text-center max-md:mb-4">Subtotal</h5>
 
                     <div class="flex items-center justify-between gap-5 ">
-                        <button
+                        {/* <button
                             class="rounded-full py-2.5 px-3 bg-indigo-50 text-indigo-600 font-semibold text-xs text-center whitespace-nowrap transition-all duration-500 hover:bg-indigo-100">Promo
-                            Code?</button>
+                            Code?</button> */}
                         <h6 class="font-manrope font-bold text-3xl lead-10 text-indigo-600">{
                           
                        total
